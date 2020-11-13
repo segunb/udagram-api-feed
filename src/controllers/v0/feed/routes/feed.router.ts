@@ -28,6 +28,7 @@ export function requireAuth(req: Request, res: Response, next: NextFunction) {
 
 // Get all feed items
 router.get('/', async (req: Request, res: Response) => {
+  console.log("GET request received at udagram-api-feed endpoint /")
   const items = await FeedItem.findAndCountAll({order: [['id', 'DESC']]});
   items.rows.map((item) => {
     if (item.url) {
@@ -40,6 +41,7 @@ router.get('/', async (req: Request, res: Response) => {
 // Get a feed resource
 router.get('/:id',
     async (req: Request, res: Response) => {
+      console.log("GET request received at udagram-api-feed endpoint /:id")
       const {id} = req.params;
       const item = await FeedItem.findByPk(id);
       res.send(item);
@@ -49,6 +51,7 @@ router.get('/:id',
 router.get('/signed-url/:fileName',
     requireAuth,
     async (req: Request, res: Response) => {
+      console.log("GET request received at udagram-api-feed endpoint /signed-url/:fileName")
       const {fileName} = req.params;
       const url = AWS.getPutSignedUrl(fileName);
       res.status(201).send({url: url});
@@ -58,6 +61,7 @@ router.get('/signed-url/:fileName',
 router.post('/',
     requireAuth,
     async (req: Request, res: Response) => {
+      console.log("POST request received at udagram-api-feed endpoint /")
       const caption = req.body.caption;
       const fileName = req.body.url; // same as S3 key name
 
